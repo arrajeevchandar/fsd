@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sorting Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    #bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      height: 300px;
+      margin: 30px;
+    }
+    .bar {
+      width: 10px;
+      margin: 0 1px;
+      background: #4caf50;
+      transition: height 0.1s;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sorting Visualizer</h1>
+  <button onclick="startSort()">Sort</button>
+  <div id="bars"></div>
+
+  <script>
+    const worker = new Worker("worker.js");
+    const barContainer = document.getElementById("bars");
+    let array = [];
+
+    function generateBars() {
+      array = [];
+      barContainer.innerHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const value = Math.floor(Math.random() * 300 + 20);
+        array.push(value);
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = value + 'px';
+        barContainer.appendChild(bar);
+      }
+    }
+
+    function startSort() {
+      worker.postMessage(array);
+    }
+
+    worker.onmessage = function (e) {
+      const newArr = e.data;
+      const bars = document.getElementsByClassName('bar');
+      for (let i = 0; i < newArr.length; i++) {
+        bars[i].style.height = newArr[i] + 'px';
+        bars[i].style.background = `hsl(${newArr[i]}, 100%, 50%)`;
+      }
+    };
+
+    generateBars();
+  </script>
+</body>
+</html>
