@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="header">
+   <a href="index.html" class="site-title">
+  <h1>Exam Result Portal</h1>
+</a>
+      <nav class="navbar">
+   <button class="hamburger" onclick="toggleMenu()">☰</button>
+<ul class="nav" id="navMenu">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="results.html">Results</a></li>
+  <li><a href="reevaluation.html">Re-evaluation</a></li>
+  <li><a href="contact.html">Contact</a></li>
+   <li><a href="feedback.html">Feedback</a></li>
+  <li id="authSection">
+    <!-- This will be dynamically filled -->
+    <button class="btn nav-btn" onclick="window.location.href='signin.html';">Sign In</button>
+    <button class="btn nav-btn" onclick="window.location.href='signup.html';">Sign Up</button>
+  </li>
+</ul>
+
+
+  </nav>
+  </header>
+  <div class="main-content">
+        
+    <div class="card">
+      <h2 style="text-align: center;">Feedback Form</h2>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="feedbackName">Your Name</label>
+        <input type="text" id="feedbackName" placeholder="Enter your name" class="input" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="feedbackComment">Your Feedback</label>
+        <textarea id="feedbackComment" placeholder="Enter your feedback" rows="4" class="input"></textarea>
+      </div>
+
+      <button class="btn" onclick="submitFeedback()">Submit Feedback</button>
+    </div>
+
+    <div class="card" style="margin-top: 2rem;">
+      <h3>Previous Feedback</h3>
+      <div id="feedbackList" style="margin-top: 1rem;"></div>
+    </div>
+  </div>
+  <footer class="footer">
+  <p>&copy; 2025 A R Rajeev Chandar | <span id="todayDate"></span> | All rights reserved.</p>
+</footer>
+
+  <script>
+    // Submit feedback and store in localStorage
+    function submitFeedback() {
+      const name = document.getElementById("feedbackName").value.trim();
+      const comment = document.getElementById("feedbackComment").value.trim();
+
+      if (!name || !comment) {
+        alert("Please enter both name and comment.");
+        return;
+      }
+
+      const feedback = { name, comment, time: new Date().toLocaleString() };
+      const feedbacks = JSON.parse(localStorage.getItem("feedbacks") || "[]");
+      feedbacks.push(feedback);
+      localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
+
+      document.getElementById("feedbackName").value = "";
+      document.getElementById("feedbackComment").value = "";
+
+      renderFeedbacks();
+    }
+
+    // Render feedbacks below the form
+    function renderFeedbacks() {
+      const feedbacks = JSON.parse(localStorage.getItem("feedbacks") || "[]");
+      const list = document.getElementById("feedbackList");
+      list.innerHTML = feedbacks
+        .map(f => `
+          <div class="card" style="margin-bottom: 1rem; background-color: #f3f4f6;">
+            <p><strong>${f.name}</strong> <em style="color:#6b7280;">(${f.time})</em></p>
+            <p>${f.comment}</p>
+          </div>
+        `)
+        .reverse() // most recent on top
+        .join('');
+    }
+
+    // Load feedbacks on page load
+    window.onload = renderFeedbacks;
+    const authSection = document.getElementById("authSection");
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+    const userName = localStorage.getItem("userName");
+
+    if (isLoggedIn === "true" && userName) {
+      console.log(userName);
+      authSection.innerHTML = `
+        <span>Welcome, <strong>${userName}</strong></span>
+        <button class="btn" onclick="logoutUser()">Logout</button>
+      `;
+    }
+
+    function logoutUser() {
+      sessionStorage.clear();
+      location.reload();
+    }
+    const today = new Date();
+  const formatted = today.getDate().toString().padStart(2, '0') + '-' +
+                    (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                    today.getFullYear();
+  document.getElementById('todayDate').textContent = formatted;
+  </script>
+</body>
+</html>

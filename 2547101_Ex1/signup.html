@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-content">
+    <div class="hero">
+  <h2>Sign Up</h2>
+    <input type="text" id="signupName" placeholder="Name" required><br><br>
+        <input type="email" id="signupEmail" placeholder="Email" required><br><br>
+        <input type="password" id="signupPassword" placeholder="Password" required><br><br>
+  <button class="btn" onclick="saveUser()">Sign Up</button>
+  <p id="output"></p>
+</div> </div>
+  <script>
+    function saveUser() {
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      // Save to localStorage
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+
+      // Set session
+      sessionStorage.setItem("isLoggedIn", "true");
+
+      document.getElementById("output").innerHTML = "Signup successful. Redirecting to home...";
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
