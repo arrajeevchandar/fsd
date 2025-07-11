@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Result Management System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white/80 backdrop-blur-md fixed w-full z-20 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
+      <a href="#" class="text-2xl font-bold text-blue-700 flex items-center gap-2">
+        <i class="fa-solid fa-graduation-cap"></i>
+        ERMS
+      </a>
+      <ul class="hidden md:flex gap-8 font-medium">
+        <li><a href="#home" class="flex items-center gap-1 hover:text-blue-600"><i class="fa-solid fa-house"></i>Home</a></li>
+        <li><a href="#places" class="flex items-center gap-1 hover:text-blue-600"><i class="fa-solid fa-map-location-dot"></i>Places</a></li>
+        <li><a href="#gallery" class="flex items-center gap-1 hover:text-blue-600"><i class="fa-solid fa-image"></i>Gallery</a></li>
+        <li><a href="#contact" class="flex items-center gap-1 hover:text-blue-600"><i class="fa-solid fa-envelope"></i>Contact</a></li>
+      </ul>
+      <button id="hamburger" class="md:hidden text-2xl" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <ul id="mobileMenu" class="md:hidden hidden flex-col gap-4 px-4 pb-4 font-medium bg-white/90">
+      <li><a href="#home" class="block py-1 hover:text-blue-600"><i class="fa-solid fa-house mr-1"></i>Home</a></li>
+      <li><a href="#places" class="block py-1 hover:text-blue-600"><i class="fa-solid fa-map-location-dot mr-1"></i>Places</a></li>
+      <li><a href="#gallery" class="block py-1 hover:text-blue-600"><i class="fa-solid fa-image mr-1"></i>Gallery</a></li>
+      <li><a href="#contact" class="block py-1 hover:text-blue-600"><i class="fa-solid fa-envelope mr-1"></i>Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="home" class="pt-24 h-[80vh] bg-cover bg-center flex items-center justify-center" style="background-image:url('https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080&w=1920');">
+    <div class="bg-black/60 p-8 rounded-xl text-center max-w-2xl mx-4">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4">Manage &amp; Publish Results Seamlessly</h1>
+      <p class="text-lg sm:text-xl text-gray-200 mb-6">A modern Exam Result Management System for universities and schools.</p>
+      <a href="#places" class="inline-block bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-400 text-white font-semibold px-7 py-3 rounded-full transition-transform duration-300 hover:-translate-y-1">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Video Section -->
+<section id="places" class="py-16 px-4 max-w-6xl mx-auto">
+  <h2 class="text-3xl font-bold text-center mb-8">Explore Our Campus</h2>
+  <div class="aspect-w-16 aspect-h-9">
+    <video controls playsinline poster="image.png" class="w-full rounded-xl shadow-lg">
+      <source src="video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</section>
+
+  <!-- Audio Section -->
+  <section class="py-12 px-4 max-w-4xl mx-auto text-center">
+    <h3 class="text-2xl font-semibold mb-4">Focus Music While You Work</h3>
+    <audio controls class="mx-auto">
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mp3">
+    </audio>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="py-16 px-4 bg-gray-50">
+    <h2 class="text-3xl font-bold text-center mb-10">Gallery</h2>
+    <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+      <img src="https://images.pexels.com/photos/256401/pexels-photo-256401.jpeg" alt="Campus" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+      <img src="https://images.pexels.com/photos/1184578/pexels-photo-1184578.jpeg" alt="Classroom" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+      <img src="https://images.pexels.com/photos/207691/pexels-photo-207691.jpeg" alt="Library" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+    </div>
+  </section>
+
+  <!-- Dynamic Results Section -->
+  <section id="results" class="py-16 px-4">
+    <h2 class="text-3xl font-bold text-center mb-10">Latest Results</h2>
+    <div id="resultCards" class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto"></div>
+  </section>
+
+  <!-- Contact & SVG Section -->
+  <section id="contact" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
+      <p class="mb-8 text-gray-600">Have questions about integrating ERMS with your institution? Reach out!</p>
+      <form class="grid gap-4">
+        <input type="text" placeholder="Name" class="p-3 rounded-lg border" required>
+        <input type="email" placeholder="Email" class="p-3 rounded-lg border" required>
+        <textarea placeholder="Message" rows="4" class="p-3 rounded-lg border" required></textarea>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">Send Message</button>
+      </form>
+    </div>
+    <div class="flex justify-center mt-12">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-16 h-16 text-blue-600 fill-current">
+        <path d="M32 2C16 2 2 14 2 30c0 8 4 15 10 20l-4 12 12-4c5 3 11 4 17 4 16 0 30-12 30-28S48 2 32 2Z"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-200 text-center py-6">
+    <p>&copy; 2025 Exam Result Management System</p>
+    <div class="text-2xl mt-2 space-x-4">
+      <a href="#" class="hover:text-blue-500"><i class="fa-brands fa-github"></i></a>
+      <a href="#" class="hover:text-blue-400"><i class="fa-brands fa-twitter"></i></a>
+      <a href="#" class="hover:text-pink-500"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => {
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.querySelector('#hamburger i');
+      menu.classList.toggle('hidden');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-xmark');
+    });
+
+    fetch('https://jsonplaceholder.typicode.com/users?_limit=6')
+      .then(res => res.json())
+      .then(users => {
+        const container = document.getElementById('resultCards');
+        users.forEach(user => {
+          const card = document.createElement('article');
+          card.className = 'bg-white p-6 rounded-xl shadow hover:shadow-lg transition sm:flex sm:flex-col';
+          card.innerHTML = `
+            <h3 class="text-xl font-semibold flex items-center gap-2 mb-2"><i class="fa-solid fa-user-graduate text-blue-600"></i>${user.name}</h3>
+            <p class="text-gray-600 mb-4">Course: Bachelor of Technology</p>
+            <p class="text-gray-700 font-medium">GPA: ${(Math.random()*4+6).toFixed(2)}</p>`;
+          container.appendChild(card);
+        });
+      });
+  </script>
+</body>
+</html>
