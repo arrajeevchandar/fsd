@@ -54,6 +54,7 @@
   <div class="aspect-w-16 aspect-h-9">
     <video controls playsinline poster="image.png" class="w-full rounded-xl shadow-lg">
       <source src="video.mp4" type="video/mp4" />
+       <track src="subtitles.vtt" kind="subtitles" srclang="en" label="English" default>
       Your browser does not support the video tag.
     </video>
   </div>
@@ -95,11 +96,14 @@
         <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">Send Message</button>
       </form>
     </div>
-    <div class="flex justify-center mt-12">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-16 h-16 text-blue-600 fill-current">
-        <path d="M32 2C16 2 2 14 2 30c0 8 4 15 10 20l-4 12 12-4c5 3 11 4 17 4 16 0 30-12 30-28S48 2 32 2Z"/>
-      </svg>
-    </div>
+<div class="flex justify-center mt-6 group relative">
+  <!-- Animated Spinning Globe -->
+  <svg class= " w-16 h-16 text-sky-600 animate-[spin_5s_linear_infinite] group-hover:text-sky-800 transition duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+    <path d="M256 8C119 8 8 119.1 8 256s111 248 248 248 248-111.1 248-248S393 8 256 8zm0 464c-38.7 0-70.1-48.6-82.7-112h165.4c-12.6 63.4-44 112-82.7 112zm0-416c38.7 0 70.1 48.6 82.7 112H173.3C185.9 104.6 217.3 56 256 56zm-100.8 32.2C122.7 121.7 104 182.7 104 256s18.7 134.3 51.2 167.8C145.1 388.1 136 323.8 136 256s9.1-132.1 19.2-167.8zM368.8 423.8C389.3 390.3 408 329.3 408 256s-18.7-134.3-51.2-167.8C366.9 123.9 376 188.2 376 256s-9.1 132.1-19.2 167.8z"/>
+  </svg>
+  
+</div>
+
   </section>
 
   <!-- Footer -->
