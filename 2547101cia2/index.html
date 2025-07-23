@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E shop</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"; />
+
+
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+
+
+<body class="bg-gray-100 text-gray-800" onload="getLocation()">
+
+  <!-- Navbar -->
+  <nav class="bg-white/90 backdrop-blur-md fixed top-0 w-full z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <a href="#" class="text-2xl font-bold text-blue-700 flex items-center gap-2">
+        <i class="fa-solid fa-shopping-bag"></i> E shop
+      </a>
+      <ul class="hidden md:flex gap-6 font-medium">
+        <li><a href="#home" class="hover:text-blue-600 flex items-center gap-1"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="#products" class="hover:text-blue-600 flex items-center gap-1"><i class="fa-solid fa-chart-bar"></i>products</a></li>
+        <li><a href="#gallery" class="hover:text-blue-600 flex items-center gap-1"><i class="fa-solid fa-image"></i> Gallery</a></li>
+        <li><a href="#contact" class="hover:text-blue-600 flex items-center gap-1"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+      </ul>
+      <div id="authSection" class="hidden md:flex gap-3 items-center"></div>
+      <button id="hamburger" class="md:hidden text-2xl"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <ul id="mobileMenu" class="md:hidden hidden flex-col bg-white px-6 py-4 space-y-3 text-center font-medium">
+      <li><a href="#home" class="hover:text-blue-600">Home</a></li>
+      <li><a href="#products" class="hover:text-blue-600">products</a></li>
+      <li><a href="#gallery" class="hover:text-blue-600">Gallery</a></li>
+      <li><a href="#contact" class="hover:text-blue-600">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="home" class="pt-24 h-[85vh] bg-cover bg-center flex items-center justify-center" style="background-image: url('https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg');">
+    <div class="bg-black/60 p-8 rounded-xl text-center max-w-2xl mx-4">
+      <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4">E Shop Explorer</h1>
+      <p class="text-lg md:text-xl text-gray-200 mb-6">Search, Explore And Shop for Items.</p>
+      <a href="#products" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 text-white font-semibold rounded-lg">Shop</a>
+    </div>
+  </header>
+
+  <!-- Results Section with Fetch API -->
+  <section id="products" class="py-16 px-6 max-w-7xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-8">Search for your products</h2>
+
+   <input type="text" placeholder="Search your products" id="search">
+   <button id="fetchproductss" class="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700">search</button>
+
+        <select id="sorting" class="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700">
+            <option value="asc">Name Ascending</option>
+            <option value="desc"> Name Descending</option>
+        </select>
+        <div id="product-container" class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+        </div>
+        <div id="pagination-container">
+
+        </div>
+  </section>
+
+
+
+  <!-- Media -->
+  <section class="px-6 py-16 max-w-5xl mx-auto text-center">
+    <h3 class="text-2xl font-semibold mb-6">Explore our online store</h3>
+    <video controls class="w-full rounded-xl shadow mb-8" poster="https://via.placeholder.com/800x400.png?text=Campus+Tour">
+      <source src="Set1 Video.mp4" type="video/mp4" />
+      <track src="subtitles.vtt" kind="subtitles" srclang="en" label="English" default>
+    </video>
+
+    <h3 class="text-2xl font-semibold mb-4">Featured product</h3>
+    <audio controls class="mx-auto">
+      <source src="Set1 Audio.mp3" type="audio/mp3">
+    </audio>
+  </section>
+
+  <!-- Geolocation -->
+  <section class="px-6 py-16 bg-white">
+    <h3 class="text-2xl font-bold text-center mb-4">Your Current Location</h3>
+    <p id="location" class="text-center mb-4">Fetching location...</p>
+    <iframe id="map" class="w-full rounded-lg" height="50" loading="lazy" style="border:0;"></iframe>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="contact" class="py-16 px-6 bg-gray-50">
+    <div class="max-w-xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-6">Interest In Any Of Our Products? Contact For More Details</h2>
+      <form class="space-y-4">
+        <input type="text" placeholder="username" required class="w-full p-3 border rounded-lg">
+        <input type="email" placeholder="Email" required class="w-full p-3 border rounded-lg">
+        <textarea placeholder="product name" rows="4" required class="w-full p-3 border rounded-lg"></textarea>
+        <button class="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700">Send</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-300 text-center py-6">
+    <p>&copy; 2025 ERMS | <span id="todayDate"></span></p>
+    <div class="mt-2 text-2xl space-x-4">
+      <a href="#"><i class="fab fa-github hover:text-white"></i></a>
+      <a href="#"><i class="fab fa-twitter hover:text-blue-400"></i></a>
+      <a href="#"><i class="fab fa-instagram hover:text-pink-500"></i></a>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    // Toggle Mobile Menu
+    document.getElementById("hamburger").addEventListener("click", () => {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+      const icon = document.querySelector("#hamburger i");
+      icon.classList.toggle("fa-bars");
+      icon.classList.toggle("fa-xmark");
+    });
+
+    // Geolocation
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        document.getElementById("location").innerText = "Geolocation is not supported.";
+      }
+    }
+
+    function showPosition(pos) {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lon = pos.coords.longitude.toFixed(6);
+      document.getElementById("location").innerText = "Latitude: " + lat + ", Longitude: " + lon;
+    }
+
+  
+
+    // Auth logic (Fake Login)
+    const authSection = document.getElementById("authSection");
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+    const userName = localStorage.getItem("userName");
+
+    if (isLoggedIn === "true" && userName) {
+      authSection.innerHTML = `
+        <span class="text-sm text-gray-700">Welcome, <strong>${userName}</strong></span>
+        <button class="bg-red-500 text-white px-3 py-1 rounded ml-2" onclick="logoutUser()">Logout</button>
+      `;
+    } else {
+      authSection.innerHTML = `
+        <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="loginUser()">Login</button>
+      `;
+    }
+
+    function loginUser() {
+      localStorage.setItem("userName", "Rajeev");
+      sessionStorage.setItem("isLoggedIn", "true");
+      location.reload();
+    }
+
+    function logoutUser() {
+      sessionStorage.clear();
+      location.reload();
+    }
+
+    // Show Date
+    const today = new Date();
+    document.getElementById("todayDate").textContent =
+      today.toLocaleDateString("en-GB");
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
