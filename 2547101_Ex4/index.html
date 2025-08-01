@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Feedback Collection</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-dyZBtzGJm8GZHQhFqZ0sV8+SMlwiZgyyFxVTTG6m+5LMqx9UO0OlOlJ6g6n0N/9kUZANz5yECQhTgWk1EMJ81A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-100 min-h-screen p-6 text-gray-800">
+
+  <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+    <h1 class="text-3xl font-bold mb-4 text-center text-blue-700 flex items-center justify-center gap-2">
+      <i class="fa-solid fa-comment-dots text-blue-500"></i>
+      Guest Lecture Feedback Form
+    </h1>
+
+    <!-- Welcome Back Message -->
+    <div id="welcomeMsg" class="text-green-600 text-center mb-4 font-semibold hidden">Welcome back! 😊</div>
+
+    <!-- Feedback Form -->
+    <form id="feedbackForm" class="space-y-5">
+      <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      <input type="email" id="email" placeholder="Email" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+
+      <select id="department" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="">Select Department</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>EEE</option>
+        <option>MECH</option>
+        <option>CIVIL</option>
+      </select>
+
+      <!-- Rating Radio -->
+      <div>
+        <p class="mb-2 font-medium">Session Rating:</p>
+        <div id="ratingGroup" class="flex space-x-5">
+          <label class="flex items-center gap-1"><input type="radio" name="rating" value="1" required /> 1</label>
+          <label class="flex items-center gap-1"><input type="radio" name="rating" value="2" /> 2</label>
+          <label class="flex items-center gap-1"><input type="radio" name="rating" value="3" /> 3</label>
+          <label class="flex items-center gap-1"><input type="radio" name="rating" value="4" /> 4</label>
+          <label class="flex items-center gap-1"><input type="radio" name="rating" value="5" /> 5</label>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div>
+        <textarea id="comments" placeholder="Additional Comments..." rows="4" maxlength="300" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+        <p id="charCount" class="text-sm text-gray-600 text-right">0 / 300</p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-between">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md">
+          <i class="fa-solid fa-paper-plane mr-2"></i>Submit
+        </button>
+        <button type="button" id="clearBtn" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-semibold shadow-md">
+          <i class="fa-solid fa-trash mr-2"></i>Clear All
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Feedback Display Section -->
+  <div class="max-w-3xl mx-auto mt-10 space-y-4" id="feedbackDisplay"></div>
+
+  <!-- JavaScript -->
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const comments = document.getElementById('comments');
+    const charCount = document.getElementById('charCount');
+    const displayArea = document.getElementById('feedbackDisplay');
+    const clearBtn = document.getElementById('clearBtn');
+    const welcomeMsg = document.getElementById('welcomeMsg');
+
+    // Session welcome message
+    if (sessionStorage.getItem('visited')) {
+      welcomeMsg.classList.remove('hidden');
+    } else {
+      sessionStorage.setItem('visited', 'true');
+    }
+
+    // Character count update
+    comments.addEventListener('input', () => {
+      charCount.textContent = `${comments.value.length} / 300`;
+    });
+
+    // Submit handler
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const feedback = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        department: document.getElementById('department').value,
+        rating: document.querySelector('input[name="rating"]:checked').value,
+        comment: comments.value.trim(),
+        timestamp: new Date().toLocaleString()
+      };
+
+      const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+      feedbacks.push(feedback);
+      localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+      form.reset();
+      charCount.textContent = "0 / 300";
+      displayFeedbacks();
+    });
+
+    // Render feedbacks
+    function displayFeedbacks() {
+      const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+      displayArea.innerHTML = "";
+
+      if (feedbacks.length === 0) {
+        displayArea.innerHTML = `<p class="text-center text-gray-500">No feedback yet.</p>`;
+        return;
+      }
+
+      feedbacks.reverse().forEach(fb => {
+        const card = `
+          <div class="bg-white rounded-2xl shadow-md p-5">
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="text-xl font-semibold text-blue-700 flex items-center gap-2">
+                <i class="fa-solid fa-user"></i>${fb.name}
+              </h2>
+              <span class="text-sm text-gray-500">${fb.timestamp}</span>
+            </div>
+            <p class="mb-1"><strong>Email:</strong> ${fb.email}</p>
+            <p class="mb-1"><strong>Department:</strong> ${fb.department}</p>
+            <p class="mb-1"><strong>Rating:</strong> ${fb.rating} ⭐</p>
+            <p><strong>Comments:</strong> ${fb.comment || "No additional comments."}</p>
+          </div>
+        `;
+        displayArea.innerHTML += card;
+      });
+    }
+
+    // Clear all
+    clearBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to clear all feedbacks?")) {
+        localStorage.removeItem('feedbacks');
+        displayFeedbacks();
+      }
+    });
+
+    // On page load
+    window.addEventListener('load', displayFeedbacks);
+  </script>
+</body>
+</html>
