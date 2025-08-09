@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exam Result Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Glass effect with indigo tint for inputs */
+    .glass-indigo-input {
+      background: rgba(99, 102, 241, 0.2); /* indigo-500 tint */
+      border: 1.5px solid rgba(99, 102, 241, 0.4);
+      box-shadow: 0 8px 32px 0 rgba(99, 102, 241, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #1e293b; /* slate-800 */
+      transition: all 0.3s ease;
+    }
+    .glass-indigo-input:focus {
+      border-color: rgba(99, 102, 241, 0.8);
+      box-shadow: 0 8px 32px 0 rgba(99, 102, 241, 0.4);
+      outline: none;
+    }
+
+    /* Glass effect for result cards */
+    .glass-indigo-card {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1.5px solid rgba(99, 102, 241, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(99, 102, 241, 0.25);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #1e293b;
+      transition: box-shadow 0.3s ease;
+    }
+    .glass-indigo-card:hover {
+      box-shadow: 0 12px 48px 0 rgba(99, 102, 241, 0.6);
+    }
+
+    /* Glass effect for main container */
+    .glass-indigo-main {
+      background: rgba(255, 255, 255, 0.6); /* lighter white tint */
+      border: 1.5px solid rgba(99, 102, 241, 0.2);
+      box-shadow: 0 8px 40px 0 rgba(99, 102, 241, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: box-shadow 0.3s ease;
+    }
+    .glass-indigo-main:hover {
+      box-shadow: 0 12px 60px 0 rgba(99, 102, 241, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-6 font-sans text-gray-700">
+
+  <div class="max-w-5xl mx-auto rounded-xl p-10 glass-indigo-main">
+    <h1 class="text-4xl font-extrabold text-center mb-10 text-indigo-600 tracking-tight">
+      Exam Result Management System
+    </h1>
+
+    <!-- Filter Form -->
+    <form id="filterForm" class="flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0 justify-center mb-10">
+      
+      <div class="flex flex-col w-full md:w-1/2">
+        <label for="nameInput" class="mb-2 font-semibold text-gray-600">Enter the Student Name</label>
+        <input
+          type="text"
+          id="nameInput"
+          placeholder="Name"
+          autocomplete="off"
+          class="p-3 rounded-lg glass-indigo-input"
+        />
+      </div>
+      
+      <div class="flex flex-col w-full md:w-1/4">
+        <label for="courseSelect" class="mb-2 font-semibold text-gray-600">Select the Student Course</label>
+        <select
+          id="courseSelect"
+          class="p-3 rounded-lg glass-indigo-input"
+        >
+          <option value="">All Courses</option>
+          <option>Computer Science</option>
+          <option>Mathematics</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+        </select>
+      </div>
+      
+      <div class="flex items-end">
+        <button
+          type="submit"
+          class="bg-indigo-600 text-white px-7 py-3 rounded-lg hover:bg-indigo-700 transition shadow-md w-full md:w-auto font-semibold tracking-wide"
+        >
+          Search
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Results container -->
+    <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center"></div>
+
+    <!-- Message container -->
+    <p id="message" class="text-center text-gray-500 mt-8 italic"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('filterForm');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('nameInput').value.trim();
+      const course = document.getElementById('courseSelect').value;
+
+      // Build query string
+      const queryParams = new URLSearchParams();
+      if (name) queryParams.append('name', name);
+      if (course) queryParams.append('course', course);
+
+      const apiUrl = `http://localhost:3000/api/results?${queryParams.toString()}`;
+
+      message.textContent = "Loading results...";
+      resultsContainer.innerHTML = "";
+
+      fetch(apiUrl)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not OK");
+          return response.json();
+        })
+        .then(data => {
+          if (data.length === 0) {
+            message.textContent = "No matching results found.";
+            return;
+          }
+
+          message.textContent = "";
+
+          data.forEach(result => {
+            const card = document.createElement('div');
+            card.className = "glass-indigo-card rounded-2xl p-6 max-w-sm w-full cursor-pointer";
+
+            card.innerHTML = `
+              <h2 class="text-2xl font-semibold text-indigo-700 mb-4">${result.name}</h2>
+              <p class="text-indigo-900 mb-2"><span class="font-semibold">Course:</span> ${result.course}</p>
+              <p class="text-indigo-900 mb-2"><span class="font-semibold">Score:</span> ${result.score}</p>
+              <p class="text-indigo-900"><span class="font-semibold">Grade:</span> <span class="text-indigo-600">${result.grade}</span></p>
+            `;
+
+            resultsContainer.appendChild(card);
+          });
+        })
+        .catch(err => {
+          message.textContent = "Failed to fetch results. Please try again later.";
+          console.error(err);
+        });
+    });
+  </script>
+</body>
+</html>
