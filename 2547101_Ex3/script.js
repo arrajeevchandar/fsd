@@ -19,7 +19,7 @@ const displayInfo = document.getElementById('displayInfo');
     input.addEventListener('change', () => {
       document.querySelectorAll('.session-label').forEach(label => {
         label.classList.remove('selected-label');
-      });
+      });``
       const selectedLabel = input.closest('label');
       if (selectedLabel) selectedLabel.classList.add('selected-label');
     });

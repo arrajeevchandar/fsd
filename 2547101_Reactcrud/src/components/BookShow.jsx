@@ -23,6 +23,7 @@ export default function BookShow({ book, onDelete, onEdit }) {
       <button
         onClick={() => onDelete(book.id)}
         className="absolute top-3 right-3 text-white/80 hover:text-red-400 transition"
+        
       >
         ❌
       </button>
