@@ -19,10 +19,10 @@
       Guest Lecture Feedback Form
     </h1>
 
-    <!-- Welcome Back Message -->
+  
     <div id="welcomeMsg" class="text-green-600 text-center mb-4 font-semibold hidden">Welcome back! 😊</div>
 
-    <!-- Feedback Form -->
+
     <form id="feedbackForm" class="space-y-5">
       <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
       <input type="email" id="email" placeholder="Email" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
@@ -36,7 +36,7 @@
         <option>CIVIL</option>
       </select>
 
-      <!-- Rating Radio -->
+    
       <div>
         <p class="mb-2 font-medium">Session Rating:</p>
         <div id="ratingGroup" class="flex space-x-5">
@@ -48,13 +48,13 @@
         </div>
       </div>
 
-      <!-- Comments -->
+   
       <div>
         <textarea id="comments" placeholder="Additional Comments..." rows="4" maxlength="300" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
         <p id="charCount" class="text-sm text-gray-600 text-right">0 / 300</p>
       </div>
 
-      <!-- Buttons -->
+    
       <div class="flex justify-between">
         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md">
           <i class="fa-solid fa-paper-plane mr-2"></i>Submit
@@ -69,88 +69,124 @@
   <!-- Feedback Display Section -->
   <div class="max-w-3xl mx-auto mt-10 space-y-4" id="feedbackDisplay"></div>
 
-  <!-- JavaScript -->
-  <script>
-    const form = document.getElementById('feedbackForm');
-    const comments = document.getElementById('comments');
-    const charCount = document.getElementById('charCount');
-    const displayArea = document.getElementById('feedbackDisplay');
-    const clearBtn = document.getElementById('clearBtn');
-    const welcomeMsg = document.getElementById('welcomeMsg');
 
-    // Session welcome message
-    if (sessionStorage.getItem('visited')) {
-      welcomeMsg.classList.remove('hidden');
-    } else {
-      sessionStorage.setItem('visited', 'true');
+<script>
+  const form = document.getElementById('feedbackForm');
+  const comments = document.getElementById('comments');
+  const charCount = document.getElementById('charCount');
+  const displayArea = document.getElementById('feedbackDisplay');
+  const clearBtn = document.getElementById('clearBtn');
+  const welcomeMsg = document.getElementById('welcomeMsg');
+
+  if (sessionStorage.getItem('visited')) {
+    welcomeMsg.classList.remove('hidden');
+  } else {
+    sessionStorage.setItem('visited', 'true');
+  }
+
+  comments.addEventListener('input', () => {
+    charCount.textContent = `${comments.value.length} / 300`;
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name');
+    if (!name.value.trim()) {
+      alert("Please enter your full name.");
+      name.focus();
+      return;
     }
 
-    // Character count update
-    comments.addEventListener('input', () => {
-      charCount.textContent = `${comments.value.length} / 300`;
-    });
+    const email = document.getElementById('email');
+    if (!email.value.trim()) {
+      alert("Please enter your email.");
+      email.focus();
+      return;
+    } else if (!validateEmail(email.value.trim())) {
+      alert("Please enter a valid email address.");
+      email.focus();
+      return;
+    }
 
-    // Submit handler
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+    const department = document.getElementById('department');
+    if (!department.value) {
+      alert("Please select your department.");
+      department.focus();
+      return;
+    }
 
-      const feedback = {
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        department: document.getElementById('department').value,
-        rating: document.querySelector('input[name="rating"]:checked').value,
-        comment: comments.value.trim(),
-        timestamp: new Date().toLocaleString()
-      };
+    const rating = document.querySelector('input[name="rating"]:checked');
+    if (!rating) {
+      alert("Please select a session rating.");
+      document.querySelector('input[name="rating"]').focus();
+      return;
+    }
 
-      const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
-      feedbacks.push(feedback);
-      localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+    const feedback = {
+      name: name.value.trim(),
+      email: email.value.trim(),
+      department: department.value,
+      rating: rating.value,
+      comment: comments.value.trim(),
+      timestamp: new Date().toLocaleString()
+    };
 
-      form.reset();
-      charCount.textContent = "0 / 300";
-      displayFeedbacks();
-    });
+    const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    feedbacks.push(feedback);
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
 
-    // Render feedbacks
-    function displayFeedbacks() {
-      const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
-      displayArea.innerHTML = "";
+    form.reset();
+    charCount.textContent = "0 / 300";
+    displayFeedbacks();
+  });
 
-      if (feedbacks.length === 0) {
-        displayArea.innerHTML = `<p class="text-center text-gray-500">No feedback yet.</p>`;
-        return;
-      }
 
-      feedbacks.reverse().forEach(fb => {
-        const card = `
-          <div class="bg-white rounded-2xl shadow-md p-5">
-            <div class="flex justify-between items-center mb-2">
-              <h2 class="text-xl font-semibold text-blue-700 flex items-center gap-2">
-                <i class="fa-solid fa-user"></i>${fb.name}
-              </h2>
-              <span class="text-sm text-gray-500">${fb.timestamp}</span>
-            </div>
-            <p class="mb-1"><strong>Email:</strong> ${fb.email}</p>
-            <p class="mb-1"><strong>Department:</strong> ${fb.department}</p>
-            <p class="mb-1"><strong>Rating:</strong> ${fb.rating} ⭐</p>
-            <p><strong>Comments:</strong> ${fb.comment || "No additional comments."}</p>
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  }
+
+  // Render feedbacks
+  function displayFeedbacks() {
+    const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    displayArea.innerHTML = "";
+
+    if (feedbacks.length === 0) {
+      displayArea.innerHTML = `<p class="text-center text-gray-500">No feedback yet.</p>`;
+      return;
+    }
+
+    feedbacks.reverse().forEach(fb => {
+      const card = `
+        <div class="bg-white rounded-2xl shadow-md p-5">
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-xl font-semibold text-blue-700 flex items-center gap-2">
+              <i class="fa-solid fa-user"></i>${fb.name}
+            </h2>
+            <span class="text-sm text-gray-500">${fb.timestamp}</span>
           </div>
-        `;
-        displayArea.innerHTML += card;
-      });
-    }
-
-    // Clear all
-    clearBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to clear all feedbacks?")) {
-        localStorage.removeItem('feedbacks');
-        displayFeedbacks();
-      }
+          <p class="mb-1"><strong>Email:</strong> ${fb.email}</p>
+          <p class="mb-1"><strong>Department:</strong> ${fb.department}</p>
+          <p class="mb-1"><strong>Rating:</strong> ${fb.rating} ⭐</p>
+          <p><strong>Comments:</strong> ${fb.comment || "No additional comments."}</p>
+        </div>
+      `;
+      displayArea.innerHTML += card;
     });
+  }
 
-    // On page load
-    window.addEventListener('load', displayFeedbacks);
-  </script>
+  // Clear all
+  clearBtn.addEventListener('click', () => {
+    if (confirm("Are you sure you want to clear all feedbacks?")) {
+      localStorage.removeItem('feedbacks');
+      displayFeedbacks();
+    }
+  });
+
+  // On page load
+  window.addEventListener('load', displayFeedbacks);
+</script>
+
 </body>
 </html>
