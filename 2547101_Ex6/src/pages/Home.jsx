@@ -10,7 +10,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [showResults, setShowResults] = useState(false); // controls visibility
 
-  // Utility: Fisher-Yates shuffle to shuffle an array without mutating original
+
   function shuffleArray(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
