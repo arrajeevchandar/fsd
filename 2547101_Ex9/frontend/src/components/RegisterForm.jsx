@@ -21,22 +21,16 @@ export default function RegisterForm({ onRegister }) {
       const res = await axios.post(
         "http://localhost:5000/api/users/register",
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       setMessage(res.data.message || "✅ Registered successfully!");
-      
-      // 🔥 Trigger reload in App.jsx
       if (onRegister) onRegister();
 
-      // Clear form after submit
       setName("");
       setEmail("");
       setPhone("");
       setProfilePic(null);
-
     } catch (err) {
       console.error("❌ Error:", err);
       setMessage("❌ Something went wrong. Check server logs.");
@@ -44,19 +38,21 @@ export default function RegisterForm({ onRegister }) {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl mt-10">
-      <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">
-        User Registration
+    <div className="p-6 bg-white/70 backdrop-blur-xl shadow-xl rounded-2xl border border-white/40">
+      <h2 className="text-3xl font-bold text-center mb-6 text-purple-700 drop-shadow">
+        ✨ User Registration
       </h2>
       {message && (
-        <p className="text-center mb-4 text-sm text-red-500">{message}</p>
+        <p className="text-center mb-4 text-sm text-red-500 font-semibold">
+          {message}
+        </p>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Name</label>
+          <label className="block text-sm font-semibold text-gray-700">Name</label>
           <input
             type="text"
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -64,10 +60,10 @@ export default function RegisterForm({ onRegister }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Email</label>
+          <label className="block text-sm font-semibold text-gray-700">Email</label>
           <input
             type="email"
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -75,10 +71,10 @@ export default function RegisterForm({ onRegister }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Phone</label>
+          <label className="block text-sm font-semibold text-gray-700">Phone</label>
           <input
             type="text"
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
@@ -86,10 +82,10 @@ export default function RegisterForm({ onRegister }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Profile Picture</label>
+          <label className="block text-sm font-semibold text-gray-700">Profile Picture</label>
           <input
             type="file"
-            className="w-full"
+            className="w-full p-2 border rounded-lg cursor-pointer"
             onChange={(e) => setProfilePic(e.target.files[0])}
             required
           />
@@ -97,9 +93,9 @@ export default function RegisterForm({ onRegister }) {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:scale-105 transition-transform"
         >
-          Register
+          🚀 Register
         </button>
       </form>
     </div>

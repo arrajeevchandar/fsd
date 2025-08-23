@@ -44,86 +44,90 @@ export default function UserList() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Registered Users</h2>
+    <div className="p-6 bg-white/70 backdrop-blur-xl shadow-xl rounded-2xl border border-white/40">
+      <h2 className="text-3xl font-bold mb-6 text-center text-blue-700 drop-shadow">
+        👥 Registered Users
+      </h2>
       {users.length === 0 ? (
-        <p>No users found.</p>
+        <p className="text-center text-gray-600">No users found.</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-4">
           {users.map((user) => (
             <li
               key={user.id}
-              className="p-4 bg-gray-100 rounded-lg shadow flex items-center gap-4"
+              className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg shadow hover:scale-[1.02] transition-transform"
             >
-              {user.profile_picture && (
-                <img
-                  src={`http://localhost:5000/uploads/${user.profile_picture}`}
-                  alt="Profile"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-              )}
-              {editingUser === user.id ? (
-                <div className="flex flex-col gap-2">
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="border p-1 rounded"
+              <div className="flex items-center gap-4">
+                {user.profile_picture && (
+                  <img
+                    src={`http://localhost:5000/uploads/${user.profile_picture}`}
+                    alt="Profile"
+                    className="w-14 h-14 rounded-full object-cover border-2 border-purple-400 shadow-md"
                   />
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="border p-1 rounded"
-                  />
-                  <input
-                    type="text"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="border p-1 rounded"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleUpdate(user.id)}
-                      className="bg-green-500 text-white px-3 py-1 rounded"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditingUser(null)}
-                      className="bg-gray-500 text-white px-3 py-1 rounded"
-                    >
-                      Cancel
-                    </button>
+                )}
+                {editingUser === user.id ? (
+                  <div className="flex flex-col gap-2 w-full">
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="border p-2 rounded shadow-sm"
+                    />
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      className="border p-2 rounded shadow-sm"
+                    />
+                    <input
+                      type="text"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      className="border p-2 rounded shadow-sm"
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => handleUpdate(user.id)}
+                        className="bg-green-500 text-white px-4 py-1 rounded-lg shadow hover:scale-105 transition-transform"
+                      >
+                        💾 Save
+                      </button>
+                      <button
+                        onClick={() => setEditingUser(null)}
+                        className="bg-gray-500 text-white px-4 py-1 rounded-lg shadow hover:scale-105 transition-transform"
+                      >
+                        ❌ Cancel
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex-1">
-                  <p className="font-semibold">{user.name}</p>
-                  <p className="text-sm text-gray-600">{user.email}</p>
-                  <p className="text-sm text-gray-600">{user.phone}</p>
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      onClick={() => startEditing(user)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
+                ) : (
+                  <div className="flex-1">
+                    <p className="font-bold text-lg text-gray-800">{user.name}</p>
+                    <p className="text-sm text-gray-600">{user.email}</p>
+                    <p className="text-sm text-gray-600">{user.phone}</p>
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        onClick={() => startEditing(user)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded-lg shadow hover:scale-105 transition-transform"
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-lg shadow hover:scale-105 transition-transform"
+                      >
+                        🗑 Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </li>
           ))}
         </ul>
