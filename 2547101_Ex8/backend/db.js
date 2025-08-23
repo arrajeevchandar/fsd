@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "rajeev123",  // change this
+  password: "root",  // change this
   database: "erms_db"
 });
 
