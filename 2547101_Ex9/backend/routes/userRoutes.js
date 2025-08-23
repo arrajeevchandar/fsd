@@ -20,6 +20,31 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
 });
+router.put("/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone } = req.body;
+
+    // Update DB
+    await db.query(
+      "UPDATE users SET name=?, email=?, phone=? WHERE id=?",
+      [name, email, phone, id]
+    );
+
+    // Send confirmation email again
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "✅ Profile Updated",
+      text: `Hello ${name},\n\nYour profile has been successfully updated.\n\nRegards,\nExam Result Management System`,
+    });
+
+    res.json({ message: "User updated and email sent" });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 
 // ✅ Register user + send email
 router.post("/register", upload.single("profilePic"), async (req, res) => {
@@ -57,12 +82,29 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Delete user
-router.delete("/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    // 1️⃣ Get user before deleting
+    const [rows] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const user = rows[0];
+
+    // 2️⃣ Delete user
     await db.query("DELETE FROM users WHERE id = ?", [id]);
-    res.json({ message: "User deleted successfully" });
+
+    // 3️⃣ Send delete confirmation email
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "❌ Account Deleted",
+      text: `Hello ${user.name},\n\nYour account has been deleted from the Exam Result Management System.\n\nRegards,\nAdmin`,
+    });
+
+    res.json({ message: "User deleted and email sent" });
   } catch (err) {
     console.error("Error deleting user:", err);
     res.status(500).json({ error: "Database error" });

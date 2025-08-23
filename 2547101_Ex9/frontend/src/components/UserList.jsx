@@ -3,8 +3,13 @@ import axios from "axios";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
 
-  // ✅ Fetch all users
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const fetchUsers = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/users");
@@ -14,19 +19,27 @@ export default function UserList() {
     }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // ✅ Delete user
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
-      setUsers(users.filter((user) => user.id !== id)); // update UI instantly
+      await axios.delete(`http://localhost:5000/api/users/delete/${id}`);
+      setUsers(users.filter((u) => u.id !== id));
     } catch (err) {
       console.error("Error deleting user:", err);
+    }
+  };
+
+  const startEditing = (user) => {
+    setEditingUser(user.id);
+    setFormData({ name: user.name, email: user.email, phone: user.phone });
+  };
+
+  const handleUpdate = async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/api/users/update/${id}`, formData);
+      setEditingUser(null);
+      fetchUsers();
+    } catch (err) {
+      console.error("Error updating user:", err);
     }
   };
 
@@ -40,30 +53,77 @@ export default function UserList() {
           {users.map((user) => (
             <li
               key={user.id}
-              className="p-4 bg-gray-100 rounded-lg shadow flex items-center justify-between"
+              className="p-4 bg-gray-100 rounded-lg shadow flex items-center gap-4"
             >
-              <div className="flex items-center gap-4">
-                {user.profile_picture && (
-                  <img
-                    src={`http://localhost:5000/uploads/${user.profile_picture}`}
-                    alt="Profile"
-                    className="w-12 h-12 rounded-full object-cover"
+              {user.profile_picture && (
+                <img
+                  src={`http://localhost:5000/uploads/${user.profile_picture}`}
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              )}
+              {editingUser === user.id ? (
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="border p-1 rounded"
                   />
-                )}
-                <div>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="border p-1 rounded"
+                  />
+                  <input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className="border p-1 rounded"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleUpdate(user.id)}
+                      className="bg-green-500 text-white px-3 py-1 rounded"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingUser(null)}
+                      className="bg-gray-500 text-white px-3 py-1 rounded"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1">
                   <p className="font-semibold">{user.name}</p>
                   <p className="text-sm text-gray-600">{user.email}</p>
                   <p className="text-sm text-gray-600">{user.phone}</p>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => startEditing(user)}
+                      className="bg-blue-500 text-white px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              {/* ✅ Delete button */}
-              <button
-                onClick={() => handleDelete(user.id)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                Delete
-              </button>
+              )}
             </li>
           ))}
         </ul>
