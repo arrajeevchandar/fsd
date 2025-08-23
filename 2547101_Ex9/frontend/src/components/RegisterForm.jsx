@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function RegisterForm() {
+export default function RegisterForm({ onRegister }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -25,7 +25,18 @@ export default function RegisterForm() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+
       setMessage(res.data.message || "✅ Registered successfully!");
+      
+      // 🔥 Trigger reload in App.jsx
+      if (onRegister) onRegister();
+
+      // Clear form after submit
+      setName("");
+      setEmail("");
+      setPhone("");
+      setProfilePic(null);
+
     } catch (err) {
       console.error("❌ Error:", err);
       setMessage("❌ Something went wrong. Check server logs.");
